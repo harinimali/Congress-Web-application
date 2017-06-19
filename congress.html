@@ -1,0 +1,551 @@
+<html>
+    <head>
+        <title>Congress</title>
+<!--        Author: Harini Reddy Mali-->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--        <script type="text/javascript" src="jquery.js"></script>-->
+        <script src="http://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
+        <script src="http://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <!-- Font Awesome -->
+        <script src="https://use.fontawesome.com/2ca82aa2a8.js"></script>
+        <!-- AngularJS -->
+<!--        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>-->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+        <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.2.0.js"></script>
+        <!-- Ngstorage -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+        <!-- Pagination JS -->
+        <script type="text/javascript" src="Pagination/dirPagination.js"></script>
+        <!-- Congress.js -->
+        <script type="text/javascript" src="congress_ver1.js"></script>
+        <!-- Congress.css -->
+        <link href="congress.css" rel="stylesheet" type="text/css" />
+<!--
+        <style>
+            @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+        </style>
+-->
+    </head>
+    <body ng-app="congapp" ng-controller="congctrl">
+        <div class="container-fluid" ng-controller='subpage'>
+            <div class="row conheader">
+                <div class="col-md-4 col-xs-2"><button type="button" class="glyphicon glyphicon-menu-hamburger mybar" id="nav_toggle"></button>
+                </div>
+                <div class="col-md-8 col-xs-10"><a href="http://sunlightfoundation.com/" target="_blank"><img src="images/logo.png"/><span>Congress API</span></a>
+                </div>
+            </div>
+            <div class="row row-eq-height" id="nav_wrapper" ng-controller='subpage2'>
+                <div id="sidebar_wrapper" class="col-md-2 col-xs-2 mysidebar">
+                    <nav id="csidebar">
+                        <ul class="sidebar_nav">
+                            <li><a href="" id="legislators" ng-click='legi()'><i class="fa fa-user" aria-hidden="true"></i><span class="yaohide">Legislators</span></a></li>
+                            <li><a href="" id="bills" ng-click='bill()'><i class="fa fa-file-o" aria-hidden="true"></i><span class="yaohide">Bills</span></a></li>
+                            <li><a href="" id="committees" ng-click='commi()'><i class="fa fa-sign-in" aria-hidden="true"></i><span class="yaohide">Committees</span></a></li>
+                            <li><a href="" id="favorites" ng-click='favpg()'><i class="fa fa-star" aria-hidden="true"></i><span class="yaohide">Favorites</span></a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div id="maintable" class="col-md-10 col-xs-10 mycontent" ng-controller="LegiCtrl" ng-show="clicked=='1'">
+                    <div id="headings"><h3>Legislators</h3></div>
+                    <hr class="mainhr">
+                    <div class="panel panel-default">
+                        <div class="carousel slide">
+                            <div uib-carousel active="active" interval="0" no-wrap="noWrapSlides">
+                                
+                                <div uib-slide index="0" id = "formcontent">
+                                    <ul class="nav nav-tabs mytab" role="tablist" id="tabs">
+                                        <li role='presentation' class='active'><a href='#bystate' ng-click='byallstate()' aria-controls='bystate' role='tab' data-toggle='tab'>By State</a></li>
+                                        <li role='presentation'><a href='#house' ng-click='byhouse()' aria-controls='house' role='tab' data-toggle='tab'>House</a></li>
+                                        <li role='presentation'><a href='#senate' ng-click='bysenate()' aria-controls='senate' role='tab' data-toggle='tab'>Senate</a></li>
+                                    </ul>
+                                    <div class="tab-content" id="tab_content">
+                                        <div role='tabpanel' class='tab-pane active' id='bystate'>
+                                            <div class='panel panel-default ttable'>
+                                                <div class='row tabletop'>
+                                                    <div class='col-md-10 col-xs-8' id='topleft'>Legislators By State</div>
+                                                    <div class='col-md-2 col-xs-4' id='topright'><select class='myfilter' id='selectID' ng-model='stFilter' ><option value = '' selected>All States</option><option value='AL'>Alabama</option> <option value='AK'>Alaska</option> <option value='AZ'>Arizona</option> <option value='AR'>Arkansas</option> <option value='CA' >California</option> <option value='CO'>Colorado</option> <option value='CT'>Connecticut</option> <option value='DE'>Delaware</option> <option value='DC'>District Of Columbia</option> <option value='FL'>Florida</option> <option value='GA'>Georgia</option> <option value='HI'>Hawaii</option> <option value='ID'>Idaho</option> <option value='IL'>Illinois</option> <option value='IN'>Indiana</option> <option value='IA'>Iowa</option> <option value='KS'>Kansas</option> <option value='KY'>Kentucky</option> <option value='LA'>Louisiana</option> <option value='ME'>Maine</option> <option value='MD'>Maryland</option> <option value='MA'>Massachusetts</option> <option value='MI'>Michigan</option> <option value='MN'>Minnesota</option> <option value='MS'>Mississippi</option> <option value='MO'>Missouri</option> <option value='MT'>Montana</option> <option value='NE'>Nebraska</option> <option value='NV'>Nevada</option> <option value='NH'>New Hampshire</option> <option value='NJ'>New Jersey</option> <option value='NM'>New Mexico</option> <option value='NY'>New York</option> <option value='NC'>North Carolina</option> <option value='ND'>North Dakota</option> <option value='OH'>Ohio</option> <option value='OK'>Oklahoma</option> <option value='OR'>Oregon</option> <option value='PA'>Pennsylvania</option> <option value='RI'>Rhode Island</option> <option value='SC'>South Carolina</option> <option value='SD'>South Dakota</option> <option value='TN'>Tennessee</option> <option value='TX'>Texas</option> <option value='UT'>Utah</option> <option value='VT'>Vermont</option> <option value='VA'>Virginia</option> <option value='WA'>Washington</option> <option value='WV'>West Virginia</option> <option value='WI'>Wisconsin</option> <option value='WY'>Wyoming</option></select></div>
+                                                </div>
+                                                <div class='maincontent table-responsive'>
+                                                    <table class='table table-hover' id='content'>
+                                                        <thead><tr><td>Party</td><td>Name</td><td>Chamber</td><td>District</td><td>State</td><td></td></tr></thead>
+                                                        <tbody id='tablebody'><tr dir-paginate="y in result | orderBy: 'last_name' | orderBy: 'state_name' | filter: {state: stFilter} | itemsPerPage: 10" pagination-id="statepg">
+                                                            <td ng-if="y.party=='R'"><img src='images/r.png'/></td><td ng-if="y.party=='D'"><img src='images/d.png'/></td><td ng-if="y.party=='I'"><img src='images/i.png'/></td>
+                                                            <td>{{y.last_name}}, {{y.first_name}}</td>
+                                                            <td ng-if="y.chamber=='house'"><img src='images/h.png'/> {{y.chamber | firstUpper}}</td><td ng-if="y.chamber=='senate'"><img src='images/s.svg'/> {{y.chamber | firstUpper}}</td>
+                                                            <td ng-if='!y.district'>N.A.</td><td ng-if='y.district'>District {{y.district}}</td>
+                                                            <td>{{y.state_name}}</td>
+                                                            <td><button type='button' class='btn btn-sm btn-primary btn-create' ng-click="nextpg(y.bioguide_id)">View Details</button></td>
+                                                </tr></tbody></table></div>
+                                                <div class='other-controller text-center'><dir-pagination-controls boundary-links='true' on-page-change='pageChangeHandler(newPageNumber)' template-url='Pagination/dirPagination.tpl.html' pagination-id="statepg"></dir-pagination-controls></div>
+                                        </div></div>
+                                        <div role='tabpanel' class='tab-pane' id='house'>
+                                            <div class='panel panel-default ttable'>
+                                                <div class='row tabletop'>
+                                                    <div class='col-md-10 col-xs-8' id='topleft'>Legislators By House</div>
+                                                    <div class='col-md-2 col-xs-4' id='topright'><input class='myfilter' type='text' ng-model='nptHouse'/></div>
+                                                </div>
+                                                <div class='maincontent table-responsive'>
+                                                    <table class='table table-hover' id='content'>
+                                                        <thead><tr><td>Party</td><td>Name</td><td>Chamber</td><td>District</td><td>State</td><td></td></tr></thead>
+                                                        <tbody id='tablebody'><tr dir-paginate="y in result | orderBy: 'last_name' | filter: {chamber: chambers.chamber} | filter: nptHouse | itemsPerPage: 10" pagination-id="housepg">
+                                                            <td ng-if="y.party=='R'"><img src='images/r.png'/></td><td ng-if="y.party=='D'"><img src='images/d.png'/></td><td ng-if="y.party=='I'"><img src='images/i.png'/></td>
+                                                            <td>{{y.last_name}}, {{y.first_name}}</td>
+                                                            <td ng-if="y.chamber=='house'"><img src='images/h.png'/> {{y.chamber | firstUpper}}</td><td ng-if="y.chamber=='senate'"><img src='images/s.svg'/> {{y.chamber | firstUpper}}</td>
+                                                            <td ng-if='!y.district'>N.A.</td><td ng-if='y.district'>District {{y.district}}</td>
+                                                            <td>{{y.state_name}}</td>
+                                                            <td><button type='button' class='btn btn-sm btn-primary btn-create' ng-click="nextpg(y.bioguide_id)">View Details</button></td>
+                                                </tr></tbody></table></div>
+                                                <div class='other-controller text-center'><dir-pagination-controls boundary-links='true' on-page-change='pageChangeHandler(newPageNumber)' template-url='Pagination/dirPagination.tpl.html' pagination-id="housepg"></dir-pagination-controls></div>
+                                        </div></div>
+                                        <div role='tabpanel' class='tab-pane' id='senate'>
+                                            <div class='panel panel-default ttable'>
+                                                <div class='row tabletop'>
+                                                    <div class='col-md-10 col-xs-8' id='topleft'>Legislators By Senate</div>
+                                                    <div class='col-md-2 col-xs-4' id='topright'><input class='myfilter' type='text' ng-model='nptSenate'/></div>
+                                                </div>
+                                                <div class='maincontent table-responsive'>
+                                                    <table class='table table-hover' id='content'>
+                                                        <thead><tr><td>Party</td><td>Name</td><td>Chamber</td><td>District</td><td>State</td><td></td></tr></thead>
+                                                        <tbody id='tablebody'><tr dir-paginate="y in result | orderBy: 'last_name' | filter: {chamber: chambers.chamber} | filter: nptSenate | itemsPerPage: 10" pagination-id="senatepg">
+                                                            <td ng-if="y.party=='R'"><img src='images/r.png'/></td><td ng-if="y.party=='D'"><img src='images/d.png'/></td><td ng-if="y.party=='I'"><img src='images/i.png'/></td>
+                                                            <td>{{y.last_name}}, {{y.first_name}}</td>
+                                                            <td ng-if="y.chamber=='house'"><img src='images/h.png'/> {{y.chamber | firstUpper}}</td><td ng-if="y.chamber=='senate'"><img src='images/s.svg'/>{{y.chamber | firstUpper}}</td>
+                                                            <td ng-if='!y.district'>N.A.</td><td ng-if='y.district'>District {{y.district}}</td>
+                                                            <td>{{y.state_name}}</td>
+                                                            <td><button type='button' class='btn btn-sm btn-primary btn-create' ng-click="nextpg(y.bioguide_id)">View Details</button></td>
+                                                </tr></tbody></table></div>
+                                                <div class='other-controller text-center'><dir-pagination-controls boundary-links='true' on-page-change='pageChangeHandler(newPageNumber)' template-url='Pagination/dirPagination.tpl.html' pagination-id="senatepg"></dir-pagination-controls></div>
+                                        </div></div>                        
+                                    </div>
+                                </div>
+                                
+                                <div uib-slide index="1" class="item" ng-if="selected!=''">
+<!--                                    <div class='panel panel-default ttable' ng-if="selected!=''">-->
+                                        <div class="row"  ng-repeat="item in result | filter:{bioguide_id: selected}">
+                                            <div class='col-md-11 col-xs-9 detailbtn' id='topleft'>
+                                                <button type="button" class="btn btn-default backbtn" ng-click="prevpg()"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"><span class="detailheader"> Details</span></span></button>
+                                            </div>
+                                            <div class='col-md-1 col-xs-3 detailbtn' id='topright' ng-if="ifIn(item.bioguide_id)">
+                                                <button type="button" class="btn btn-default backbtn" ng-click="delFav('legi_'+item.bioguide_id)"><i class="fa fa-star fa-lg favstar" aria-hidden="true"></i></button>
+                                            </div>
+                                            <div class='col-md-1 col-xs-3 detailbtn' id='topright' ng-if="!ifIn(item.bioguide_id)">
+                                                <button type="button" class="btn btn-default backbtn" ng-click="addFav('legi_'+item.bioguide_id,item)"><i class="fa fa-star-o fa-lg" aria-hidden="true"></i></button>
+                                            </div>
+                                        </div>
+                                        <hr class="detailhr">
+                                        <div class="row detailmain" ng-repeat="item in result | filter:{bioguide_id: selected}">
+                                            <div class="col-md-6 col-xs-12 detailleft">
+                                                <hr class="detaillefthr">
+                                                <div class="row">
+                                                    <div class="col-md-6 col-xs-12">
+                                                        <img class="detailimg" ng-src="{{item.bioguide_id | imgURL}}" />
+                                                    </div>
+                                                    <div class="col-md-6 col-xs-12 imgright">
+                                                        <hr class="detaillefthr">
+                                                        <div>{{item.title}}. {{item.last_name}}, {{item.first_name}}</div>
+                                                        <hr>
+                                                        <div class="divhover" ng-if="item.oc_email"><a href="mailto:{{item.oc_email}}" target="_blank">{{item.oc_email}}</a></div>
+                                                        <div ng-if="!item.oc_email">N.A.</div>
+                                                        <hr>
+                                                        <div>Chamber: {{item.chamber | firstUpper}}</div>
+                                                        <hr>
+                                                        <div class="divhover" ng-if="item.phone">Contact: <a href="tel:{{item.phone}}">{{item.phone}}</a></div>
+                                                        <div ng-if="!item.phone">Contact: <span>N.A.</span></div>
+                                                        <hr>
+                                                        <div ng-if="item.party=='R'"><img src="images/r.png"><span> Republic</span></div>
+                                                        <div ng-if="item.party=='D'"><img src="images/d.png"><span> Democrat</span></div>
+                                                        <div ng-if="item.party=='I'"><img src="images/i.png"><span> Independent</span></div>
+                                                    </div>
+                                                </div>
+                                                <div class="lefttable">
+                                                    <hr style="margin:5px 0;">
+                                                    <div class="row lefttablediv">
+                                                        <div class="col-md-3 yaohide">Start Term</div>
+                                                        <div class="col-md-9 col-xs-12">{{item.term_start | date: MM-dd-yyyy}}</div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row lefttablediv">
+                                                        <div class="col-md-3 yaohide">End Term</div>
+                                                        <div class="col-md-9 col-xs-12">{{item.term_end | date: MM-dd-yyyy}}</div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row lefttablediv yaohide">
+                                                        <div class="col-md-3">Term</div>
+                                                        <div class="col-md-9"><uib-progressbar class="probar" animate="false" value="calTerm(item.term_start,item.term_end)" type="success"><b>{{termval}}%</b></uib-progressbar></div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row lefttablediv">
+                                                        <div class="col-md-3 yaohide">Office</div>
+                                                        <div class="col-md-9 col-xs-12"><span ng-if="item.office">{{item.office}}</span><span ng-if="!item.office">N.A.</span></div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row lefttablediv">
+                                                        <div class="col-md-3 yaohide">State</div>
+                                                        <div class="col-md-9 col-xs-12">{{item.state_name}}</div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row lefttablediv divhover" ng-if="item.fax">
+                                                        <div class="col-md-3 yaohide">Fax</div>
+                                                        <div class="col-md-9 col-xs-12"><a href="tel:{{item.fax}}" target="_blank">{{item.fax}}</a></div>
+                                                    </div>
+                                                    <div class="row lefttablediv" ng-if="!item.fax">
+                                                        <div class="col-md-3 yaohide">Fax</div>
+                                                        <div class="col-md-9 col-xs-12"><span>N.A.</span></div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row lefttablediv">
+                                                        <div class="col-md-3 yaohide">Birthday</div>
+                                                        <div class="col-md-9 col-xs-12">{{item.birthday | date: MM-dd-yy}}</div>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="row lefttablediv">
+                                                        <div class="col-md-3 yaohide">Social Links</div>
+                                                        <div class="col-md-9 col-xs-12 socialimg">
+                                                            <a href="{{item.twitter_id | twitterURL}}" target="_blank" ng-if="item.twitter_id&&selected!=''"><img src="images/t.png" /></a>
+                                                            <a href="{{item.facebook_id | fbURL}}" target="_blank" ng-if="item.facebook_id&&selected!=''"><img src="images/f.png" /></a>
+                                                            <a href="{{item.website}}" target="_blank" ng-if="item.website"><img src="images/w.png" /></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xs-12 detailright">
+                                                <div class="detailcommi table-responsive">
+                                                    <p>Committees</p>
+                                                    <table class="table">
+                                                        <thead><tr><td>Chamber</td><td>Committee ID</td><td class="yaohide">Name</td></tr></thead>
+                                                        <tbody class="mytbody">
+                                                            <tr ng-repeat="com in committees | filter: {member_ids: selected} | limitTo: 5">
+                                                                <td>{{com.chamber | firstUpper}}</td>
+                                                                <td>{{com.committee_id}}</td>
+                                                                <td  class="yaohide">{{com.name}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="detailbills table-responsive">
+                                                    <p>Bills</p>
+                                                    <table class="table">
+                                                        <thead><tr><td>Bill ID</td><td class="yaohide">Title</td><td class="yaohide">Chamber</td><td class="yaohide">Bill Type</td><td class="yaohide">Congress</td><td>Link</td></tr></thead>
+                                                        <tbody class="mytbody">
+                                                            <tr ng-repeat="bi in detailval | limitTo: 5">
+                                                                <td>{{bi.bill_id | uppercase}}</td>
+                                                                <td class="yaohide">{{bi.official_title}}</td>
+                                                                <td class="yaohide">{{bi.chamber | firstUpper}}</td>
+                                                                <td class="yaohide">{{bi.bill_type}}</td>
+                                                                <td class="yaohide">{{bi.congress}}</td>
+                                                                <td ng-if="bi.last_version.urls.pdf"><a href="{{bi.last_version.urls.pdf}}" target="_blank">Link</a></td><td ng-if="!bi.last_version.urls.pdf">N.A.</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+<!--                                    </div>-->
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="maintable2" class="col-md-10 col-xs-10 mycontent" ng-show="clicked=='2'" ng-controller='aBillCtrl'>
+                    <div id="headings"><h3>Bills</h3></div>
+                    <hr class="mainhr">
+                    <div class="panel panel-default" ng-controller='nBillCtrl'>
+                        <div class="carousel slide">
+                            <div uib-carousel active="active1" interval="0" no-wrap="noWrapSlides">
+                                
+                                <div uib-slide index="0" id = "formcontent">
+                                    <ul class="nav nav-tabs mytab" role="tablist" id="tabs">
+                                        <li role='presentation' class='active'><a href='#activebill' ng-click='abill()' aria-controls='activebill' role='tab' data-toggle='tab'>Active Bills</a></li>
+                                        <li role='presentation'><a href='#newbill' ng-click='nbill()' aria-controls='newbill' role='tab' data-toggle='tab'>New Bills</a></li>
+                                    </ul>
+                                    <div class="tab-content" id="tab_content">
+                                        <div role='tabpanel' class='tab-pane active' id='activebill'>
+                                            <div class='panel panel-default ttable'>
+                                                <div class='row tabletop'>
+                                                    <div class='col-md-10 col-xs-8' id='topleft'>Active Bills</div>
+                                                    <div class='col-md-2 col-xs-4' id='topright'><input class='myfilter' type='text' ng-model='nptABill'/></div></div>
+                                                <div class='maincontent table-responsive'>
+                                                    <table class='table table-hover' id='content'>
+                                                        <thead><tr><td>Bill ID</td><td>Bill Type</td><td class="yaohide">Title</td><td>Chamber</td><td>Introducted On</td><td>Sponsor</td><td></td></tr></thead>
+                                                        <tbody id='tablebody'><tr dir-paginate='x in result2 | filter: nptABill | itemsPerPage: 10' pagination-id="abillpg">
+                                                            <td>{{x.bill_id | uppercase}}</td>
+                                                            <td>{{x.bill_type | uppercase}}</td>
+                                                            <td class="billtitle yaohide">{{x.official_title}}</td>
+                                                            <td ng-if="x.chamber=='house'"><img src='images/h.png'/> {{x.chamber | firstUpper}}</td><td ng-if="x.chamber=='senate'"><img src='images/s.svg'/>
+                                                            {{x.chamber | firstUpper}}</td>
+                                                            <td>{{x.introduced_on}}</td>
+                                                            <td>{{x.sponsor.title}}. {{x.sponsor.last_name}}, {{x.sponsor.first_name}}</td>
+                                                            <td><button type='button' class='btn btn-sm btn-primary btn-create' ng-click="nextpg2(x.bill_id)">View Details</button></td>
+                                                </tr></tbody></table></div>
+                                                <div class='other-controller text-center'><dir-pagination-controls boundary-links='true' on-page-change='pageChangeHandler(newPageNumber)' template-url='Pagination/dirPagination.tpl.html' pagination-id="abillpg"></dir-pagination-controls></div>
+                                        </div></div>
+                                        <div role='tabpanel' class='tab-pane' id='newbill' >
+                                            <div class='panel panel-default ttable'>
+                                                <div class='row tabletop'>
+                                                    <div class='col-md-10 col-xs-8' id='topleft'>New Bills</div>
+                                                    <div class='col-md-2 col-xs-4' id='topright'><input class='myfilter' type='text' ng-model='nptNBill'/></div></div>
+                                                <div class='maincontent table-responsive'>
+                                                    <table class='table table-hover' id='content'>
+                                                        <thead><tr><td>Bill ID</td><td>Bill Type</td><td class="yaohide">Title</td><td>Chamber</td><td>Introducted On</td><td>Sponsor</td><td></td></tr></thead>
+                                                        <tbody id='tablebody'><tr dir-paginate='z in result3 | filter: nptNBill | itemsPerPage: 10' pagination-id="nbillpg">
+                                                            <td>{{z.bill_id | uppercase}}</td>
+                                                            <td>{{z.bill_type | uppercase}}</td>
+                                                            <td class="billtitle yaohide">{{z.official_title}}</td>
+                                                            <td ng-if="z.chamber=='house'"><img src='images/h.png'/> {{z.chamber | firstUpper}}</td><td ng-if="z.chamber=='senate'"><img src='images/s.svg'/> {{z.chamber | firstUpper}}</td>
+                                                            <td>{{z.introduced_on}}</td>
+                                                            <td>{{z.sponsor.title}}. {{z.sponsor.last_name}}, {{z.sponsor.first_name}}</td>
+                                                            <td><button type='button' class='btn btn-sm btn-primary btn-create' ng-click="nextpg2(z.bill_id)">View Details</button></td>
+                                                </tr></tbody></table></div>
+                                                <div class='other-controller text-center'><dir-pagination-controls boundary-links='true' on-page-change='pageChangeHandler(newPageNumber)' template-url='Pagination/dirPagination.tpl.html' pagination-id="nbillpg"></dir-pagination-controls></div>
+                                        </div></div>                        
+                                    </div>
+                                </div>
+                                
+                                <div uib-slide index="1" class="item" >
+<!--                                    <div class='panel panel-default ttable'>-->
+                                        <div class="row" ng-repeat="bill in allbills">
+                                            <div class='col-md-11 col-xs-9 detailbtn' id='topleft'>
+                                                <button type="button" class="btn btn-default backbtn" ng-click="prevpg1()"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"><span class="detailheader"> Details</span></span></button>
+                                            </div>
+                                            <div class='col-md-1 col-xs-3 detailbtn' id='topright' ng-if="ifIn(bill.bill_id)">
+                                                <button type="button" class="btn btn-default backbtn" ng-click="delFav('bill_'+bill.bill_id)"><i class="fa fa-star fa-lg favstar" aria-hidden="true"></i></button>
+                                            </div>
+                                            <div class='col-md-1 col-xs-3 detailbtn' id='topright' ng-if="!ifIn(bill.bill_id)">
+                                                <button type="button" class="btn btn-default backbtn" ng-click="addFav('bill_'+bill.bill_id,bill)"><i class="fa fa-star-o fa-lg" aria-hidden="true"></i></button>
+                                            </div>
+                                        </div>
+                                        <hr class="detailhr">
+                                        <div class="row detailmain" ng-repeat="bill in allbills">
+                                            <div class="col-md-6 col-xs-12 billdetailleft">
+                                                <div class="row billpg">
+                                                    <hr>
+                                                    <div class="col-md-2 col-xs-4"><p>Bill ID</p></div>
+                                                    <div class="col-md-10 col-xs-8">{{bill.bill_id | uppercase}}</div>
+                                                </div>
+                                                <div class="row billpg yaohide">
+                                                    <hr>
+                                                    <div class="col-md-2 col-xs-4"><p>Title</p></div>
+                                                    <div class="col-md-10 col-xs-8">{{bill.official_title}}</div>
+                                                </div>
+                                                <div class="row billpg">
+                                                    <hr>
+                                                    <div class="col-md-2 col-xs-4"><p>Bill Type</p></div>
+                                                    <div class="col-md-10 col-xs-8">{{bill.bill_type | uppercase}}</div>
+                                                </div>
+                                                <div class="row billpg">
+                                                    <hr>
+                                                    <div class="col-md-2 col-xs-4"><p>Sponsor</p></div>
+                                                    <div class="col-md-10 col-xs-8">{{bill.sponsor.title}}. {{bill.sponsor.last_name}}, {{bill.sponsor.first_name}}</div>
+                                                </div>
+                                                <div class="row billpg">
+                                                    <hr>
+                                                    <div class="col-md-2 col-xs-4"><p>Chamber</p></div>
+                                                    <div class="col-md-10 col-xs-8">{{bill.chamber | firstUpper}}</div>
+                                                </div>
+                                                <div class="row billpg">
+                                                    <hr>
+                                                    <div class="col-md-2 col-xs-4"><p>Status</p></div>
+                                                    <div class="col-md-10 col-xs-8"><span ng-if="bill.history.active==true">Active</span><span ng-if="bill.history.active==false">New</span></div>
+                                                </div>
+                                                <div class="row billpg">
+                                                    <hr>
+                                                    <div class="col-md-2 col-xs-4"><p>Introduced On</p></div>
+                                                    <div class="col-md-10 col-xs-8">{{bill.introduced_on | date: MM-DD-YYYY}}</div>
+                                                </div>
+                                                <div class="row billpg">
+                                                    <hr>
+                                                    <div class="col-md-2 col-xs-4"><p>Congress URL</p></div>
+                                                    <div class="col-md-10 col-xs-8" ng-if="bill.urls.congress"><a href="{{bill.urls.congress}}" target="_blank">URL</a></div>
+                                                    <div class="col-md-10 col-xs-8" ng-if="!bill.urls.congress">N.A.</div>
+                                                </div>
+                                                <div class="row billpg">
+                                                    <hr>
+                                                    <div class="col-md-2 col-xs-4"><p>Version Status</p></div>
+                                                    <div class="col-md-10 col-xs-8">{{bill.last_version.version_name}}</div>
+                                                </div>
+                                                <div class="row billpg">
+                                                    <hr>
+                                                    <div class="col-md-2 col-xs-4"><p>Bill URL</p></div>
+                                                    <div class="col-md-10 col-xs-8" ng-if="bill.last_version.urls.pdf"><a href="{{bill.last_version.urls.pdf}}" target="_blank">Link</a></div>
+                                                    <div class="col-md-10 col-xs-8" ng-if="!bill.last_version.urls.pdf">N.A.</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xs-12 detailright">
+                                                <object class="pdfview" ng-if="bill.last_version.urls.pdf" data="{{bill.last_version.urls.pdf}}" type='application/pdf' height="100%" width="100%">
+                                                </object>
+                                                <object class="pdfview" ng-if="!bill.last_version.urls.pdf"></object>
+                                            </div>
+                                        </div>
+<!--                                    </div>-->
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="maintable3" class="col-md-10 col-xs-10 mycontent" ng-controller='CommiCtrl' ng-show="clicked=='3'">
+                    <div id="headings"><h3>Committees</h3></div>
+                    <hr class="mainhr">
+                    <div class="panel panel-default">
+                        <ul class="nav nav-tabs mytab" role="tablist" id="tabs">
+                            <li role='presentation' class='active'><a href='#chouse' aria-controls='chouse' role='tab' data-toggle='tab'>House</a></li>
+                            <li role='presentation'><a href='#csenate' aria-controls='csenate' role='tab' data-toggle='tab'>Senate</a></li>
+                            <li role='presentation'><a href='#cjoint' aria-controls='cjoint' role='tab' data-toggle='tab'>Joint</a></li>
+                        </ul>
+                        <div class="tab-content" id="tab_content">
+                            <div role='tabpanel' class='tab-pane active' id='chouse'>
+                                <div class='panel panel-default ttable'>
+                                    <div class='row tabletop'>
+                                        <div class='col-md-10 col-xs-8' id='topleft'>House</div>
+                                        <div class='col-md-2 col-xs-4' id='topright'><input class='myfilter' type='text' ng-model='nptCHouse'/></div></div>                                    
+                                    <div class='maincontent table-responsive'>
+                                        <table class='table table-hover' id='content'>
+                                            <thead><tr><td></td><td>Chamber</td><td>Committee ID</td><td>Name</td><td>Parent Committee</td><td>Contact</td><td>Office</td></tr></thead>
+                                            <tbody id='tablebody'><tr dir-paginate="a in result4 | orderBy: 'committee_id' | filter: {chamber: 'house'} | filter: nptCHouse | itemsPerPage: 10" pagination-id="chousepg">
+                                                <td ng-if="ifIn(a.committee_id)"><button type="button" class="btn btn-default favbtn" ng-click="delFav('comm_'+a.committee_id)"><i class="fa fa-star fa-lg favstar" aria-hidden="true"></i></button></td>
+                                                <td ng-if="!ifIn(a.committee_id)"><button type="button" class="btn btn-default favbtn" ng-click="addFav('comm_'+a.committee_id,a)"><i class="fa fa-star-o fa-lg" aria-hidden="true"></i></button></td>
+                                                <td><img src='images/h.png'/> {{a.chamber | firstUpper}}</td>
+                                                <td>{{a.committee_id}}</td>
+                                                <td>{{a.name}}</td>
+                                                <td ng-if='!a.parent_committee_id'></td><td ng-if='a.parent_committee_id'>{{a.parent_committee_id}}</td>
+                                                <td ng-if='!a.phone'>N.A.</td><td ng-if='a.phone'>{{a.phone}}</td>
+                                                <td ng-if='!a.office'>N.A.</td><td ng-if='a.office'>{{a.office}}</td>
+                                    </tr></tbody></table></div>
+                                    <div class='other-controller text-center'><dir-pagination-controls boundary-links='true' on-page-change='pageChangeHandler(newPageNumber)' template-url='Pagination/dirPagination.tpl.html' pagination-id="chousepg"></dir-pagination-controls></div>
+                            </div></div>
+                            <div role='tabpanel' class='tab-pane' id='csenate'>
+                                <div class='panel panel-default ttable'>
+                                    <div class='row tabletop'>
+                                        <div class='col-md-10 col-xs-8' id='topleft'>Senate</div>
+                                        <div class='col-md-2 col-xs-4' id='topright'><input class='myfilter' type='text' ng-model='nptCSenate'/></div></div>                                    
+                                    <div class='maincontent table-responsive'>
+                                        <table class='table table-hover' id='content'>
+                                            <thead><tr><td></td><td>Chamber</td><td>Committee ID</td><td>Name</td><td>Parent Committee</td></tr></thead>
+                                            <tbody id='tablebody'><tr dir-paginate="b in result4 | orderBy: 'committee_id' | filter: {chamber: 'senate'} | filter: nptCSenate | itemsPerPage: 10" pagination-id="csenatepg">
+                                                <td ng-if="ifIn(b.committee_id)"><button type="button" class="btn btn-default favbtn" ng-click="delFav('comm_'+b.committee_id)"><i class="fa fa-star fa-lg favstar" aria-hidden="true"></i></button></td>
+                                                <td ng-if="!ifIn(b.committee_id)"><button type="button" class="btn btn-default favbtn" ng-click="addFav('comm_'+b.committee_id,b)"><i class="fa fa-star-o fa-lg" aria-hidden="true"></i></button></td>
+                                                <td><img src='images/s.svg'/>{{b.chamber | firstUpper}}</td>
+                                                <td>{{b.committee_id}}</td>
+                                                <td>{{b.name}}</td>
+                                                <td ng-if='!b.parent_committee_id'></td><td ng-if='b.parent_committee_id'>{{b.parent_committee_id}}</td>
+                                    </tr></tbody></table></div>
+                                    <div class='other-controller text-center'><dir-pagination-controls boundary-links='true' on-page-change='pageChangeHandler(newPageNumber)' template-url='Pagination/dirPagination.tpl.html' pagination-id="csenatepg"></dir-pagination-controls></div>
+                            </div></div>
+                            <div role='tabpanel' class='tab-pane' id='cjoint'>
+                                <div class='panel panel-default ttable'>
+                                    <div class='row tabletop'>
+                                        <div class='col-md-10 col-xs-8' id='topleft'>Joint</div>
+                                        <div class='col-md-2 col-xs-4' id='topright'><input class='myfilter' type='text' ng-model='nptCJoint'/></div></div>                                    
+                                    <div class='maincontent table-responsive'>
+                                        <table class='table table-hover' id='content'>
+                                            <thead><tr><td></td><td>Chamber</td><td>Committee ID</td><td>Name</td></tr></thead>
+                                            <tbody id='tablebody'><tr dir-paginate="c in result4 | orderBy: 'committee_id' | filter: {chamber: 'joint'} | filter: nptCJoint | itemsPerPage: 10" pagination-id="cjointpg">
+                                                <td ng-if="ifIn(c.committee_id)"><button type="button" class="btn btn-default favbtn" ng-click="delFav('comm_'+c.committee_id)"><i class="fa fa-star fa-lg favstar" aria-hidden="true"></i></button></td>
+                                                <td ng-if="!ifIn(c.committee_id)"><button type="button" class="btn btn-default favbtn" ng-click="addFav('comm_'+c.committee_id,c)"><i class="fa fa-star-o fa-lg" aria-hidden="true"></i></button></td>
+                                                <td><img src='images/s.svg'/>{{c.chamber | firstUpper}}</td>
+                                                <td>{{c.committee_id}}</td>
+                                                <td>{{c.name}}</td>
+                                    </tr></tbody></table></div>
+                                    <div class='other-controller text-center'><dir-pagination-controls boundary-links='true' on-page-change='pageChangeHandler(newPageNumber)' template-url='Pagination/dirPagination.tpl.html' pagination-id="cjointpg"></dir-pagination-controls></div>
+                            </div></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="maintable4" class="col-md-10 col-xs-10 mycontent" ng-controller="favCtrl" ng-show="clicked=='4'">
+                    <div id="headings"><h3>Favorites</h3></div>
+                    <hr class="mainhr">
+                    <div class="panel panel-default">
+                        <ul class="nav nav-tabs mytab" role="tablist" id="tabs">
+                            <li role='presentation' class='active'><a href='#favlegi' aria-controls='favlegi' role='tab' data-toggle='tab'>Legislators</a></li>
+                            <li role='presentation'><a href='#favbill' aria-controls='favbill' role='tab' data-toggle='tab'>Bills</a></li>
+                            <li role='presentation'><a href='#favcommi' aria-controls='favcommi' role='tab' data-toggle='tab'>Committees</a></li>
+                        </ul>
+                        <div class="tab-content" id="tab_content">
+                            <div role='tabpanel' class='tab-pane active' id='favlegi'>
+                                <div class='panel panel-default ttable'>
+                                    <div class='row tabletop'>
+                                        <div class='col-md-10 col-xs-10' id='topleft'>Favorite Legislators</div>
+                                    </div>
+                                    <div class='maincontent table-responsive'>
+                                        <table class="table table-hover" id='content'>
+                                            <thead><tr><td></td><td>Image</td><td>Party</td><td>Name</td><td>Chamber</td><td>State</td><td>Email</td><td></td></tr></thead>
+                                            <tbody id='tablebody'><tr ng-repeat='le in legiss'>
+                                                <td><button type="button" class="btn btn-default favbtn" ng-click="delFav('legi_'+le.bioguide_id)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button></td>
+                                                <td><img ng-src="{{le.bioguide_id | imgURL}}" style="width:27;height:33"/></td>
+                                                <td ng-if="le.party=='R'"><img src='images/r.png'/></td><td ng-if="le.party=='D'"><img src='images/d.png'/></td><td ng-if="le.party=='I'"><img src='images/i.png'/></td>
+                                                <td>{{le.last_name}}, {{le.first_name}}</td>
+                                                <td ng-if="le.chamber=='house'"><img src='images/h.png'/> {{le.chamber | firstUpper}}</td><td ng-if="le.chamber=='senate'"><img src='images/s.svg'/> {{le.chamber | firstUpper}}</td>
+                                                <td>{{le.state_name}}</td>
+                                                <td ng-if="le.oc_email"><a href="mailto:{{le.oc_email}}" target="_blank">{{le.oc_email}}</a></td>
+                                                <td ng-if="!le.oc_email">N.A.</td>
+                                                <td><a href="" ng-click="legi()">
+                                                    <button type='button' class='btn btn-sm btn-primary btn-create' ng-click="nextpg(le.bioguide_id)">View Details</button>
+                                                    </a></td>
+                                    </tr></tbody></table></div>
+                                </div>                        
+                            </div>
+                            <div role='tabpanel' class='tab-pane' id='favbill'>
+                                <div class='panel panel-default ttable'>
+                                    <div class='row tabletop'>
+                                        <div class='col-md-10 col-xs-10' id='topleft'>Favorite Bills</div>
+                                    </div>
+                                    <div class='maincontent table-responsive'>
+                                        <table class="table table-hover" id='content'>
+                                            <thead><tr><td></td><td>Bill ID</td><td>Bill Type</td><td>Title</td><td>Chamber</td><td>Introduced On</td><td>Sponsor</td><td></td></tr></thead>
+                                            <tbody id='tablebody'><tr ng-repeat='bi in billss'>
+                                                <td><button type="button" class="btn btn-default favbtn" ng-click="delFav('bill_'+bi.bill_id)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button></td>
+                                                <td>{{bi.bill_id | uppercase}}</td>
+                                                <td>{{bi.bill_type | uppercase}}</td>
+                                                <td style="width:20%;">{{bi.official_title}}</td>
+                                                <td ng-if="bi.chamber=='house'"><img src='images/h.png'/> {{bi.chamber | firstUpper}}</td><td ng-if="bi.chamber=='senate'"><img src='images/s.svg'/> {{bi.chamber | firstUpper}}</td>
+                                                <td>{{bi.introduced_on}}</td>
+                                                <td>{{bi.sponsor.title}}. {{bi.sponsor.last_name}}, {{bi.sponsor.first_name}}</td>
+                                                <td><a href="" ng-click="bill()">
+                                                    <button type='button' class='btn btn-sm btn-primary btn-create' ng-click="nextpg2(bi.bill_id)">View Details</button>
+                                                    </a></td>
+                                    </tr></tbody></table></div>
+                                </div>                        
+                            </div>
+                            <div role='tabpanel' class='tab-pane' id='favcommi'>
+                                <div class='panel panel-default ttable'>
+                                    <div class='row tabletop'>
+                                        <div class='col-md-10 col-xs-10' id='topleft'>Favorite Committees</div>
+                                    </div>
+                                    <div class='maincontent table-responsive'>
+                                        <table class="table table-hover" id='content'>
+                                            <thead><tr><td></td><td>Chamber</td><td>Committee ID</td><td>Name</td><td>Parent Committee</td><td>Sub Committee</td></tr></thead>
+                                            <tbody id='tablebody'><tr ng-repeat='co in commiss'>
+                                                <td><button type="button" class="btn btn-default favbtn" ng-click="delFav('comm_'+co.committee_id)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button></td>
+                                                <td ng-if="co.chamber=='house'"><img src='images/h.png'/> {{co.chamber | firstUpper}}</td><td ng-if="co.chamber=='senate'"><img src='images/s.svg'/> {{co.chamber | firstUpper}}</td><td ng-if="co.chamber=='joint'"><img src='images/s.svg'/> {{co.chamber | firstUpper}}</td>
+                                                <td>{{co.committee_id | uppercase}}</td>
+                                                <td>{{co.name}}</td>
+                                                <td ng-if="co.parent_committee_id">{{co.parent_committee_id}}</td>
+                                                <td ng-if="!co.parent_committee_id"></td>
+                                                <td >{{co.subcommittee | TrueorFalse}}</td>
+                                    </tr></tbody></table></div>
+                                </div>                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="footer">
+					<div class="copyright" style="text-align:center;">
+						<p>&copy; 2017 Harini Reddy. All rights reserved.</p>
+						
+					</div>
+				
+			</div>
+
+    </body>
+</html>
